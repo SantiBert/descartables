@@ -1,8 +1,10 @@
+from tabnanny import verbose
 from django.utils import timezone
 from django.db import models
 
 from autoslug import AutoSlugField
 
+capitalizeFirstChar = lambda s: s[:1].upper() + s[1:]
 
 CHOICES = (
 	("1", "Disponible"),
@@ -11,54 +13,70 @@ CHOICES = (
 
 class Brand(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255,verbose_name = "nombre", unique=True)
     slug = AutoSlugField(populate_from='name')
     status = models.CharField(max_length=10, choices=CHOICES)
-    created_date = models.DateTimeField(default=timezone.now)
+    created_date = models.DateTimeField(default=timezone.now, verbose_name = "fecha de creación")
     is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = "marca"
+        verbose_name_plural = "marcas"
     
     def __str__(self):
         return self.name
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
     status = models.CharField(max_length=10, choices=CHOICES)
-    created_date = models.DateTimeField(default=timezone.now)
+    created_date = models.DateTimeField(default=timezone.now,verbose_name = "fecha de creación")
     is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = "categoría"
+        verbose_name_plural = "categorías"
     
     def __str__(self):
         return self.name
     
 class Subcategory(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name = "categoría")
     status = models.CharField(max_length=10, choices=CHOICES)
-    created_date = models.DateTimeField(default=timezone.now)
+    created_date = models.DateTimeField(default=timezone.now,verbose_name = "fecha de creación")
     is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = "subcategoría"
+        verbose_name_plural = "subcategorías"
     
     def __str__(self):
         return self.name
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
-    brand = models.ForeignKey(Brand, on_delete=models.PROTECT)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    brand = models.ForeignKey(Brand, on_delete=models.PROTECT,verbose_name = "marca")
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name = "categoría")
     subcategory = models.ForeignKey(Subcategory, on_delete=models.PROTECT)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
-    price = models.FloatField(max_length=100)
-    code = models.CharField(max_length=10, null=True, blank=True)
+    price = models.FloatField(max_length=100,verbose_name = "precio")
+    code = models.CharField(max_length=10, null=True, blank=True,verbose_name = "código")
     #image = models.ImageField(upload_to="media/product/images/")
-    quantity = models.IntegerField(default=0)
-    description = models.TextField(null=True, blank=True)
-    taxs = models.FloatField(max_length=100, null=True, blank=True)
+    quantity = models.IntegerField(default=0, verbose_name = "cantidad")
+    description = models.TextField(null=True, blank=True, verbose_name = "descripción")
+    taxs = models.FloatField(max_length=100, null=True, blank=True, verbose_name="IVA")
     status = models.CharField(max_length=10, choices=CHOICES)
-    created_date = models.DateTimeField(default=timezone.now)
+    created_date = models.DateTimeField(default=timezone.now, verbose_name = "fecha de creación")
     is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        verbose_name = "producto"
+        verbose_name_plural = "productos"
     
     def __str__(self):
         return self.name
