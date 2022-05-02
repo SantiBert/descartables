@@ -1,0 +1,122 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}Todos los productos{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        {% if products %}
+      <div class="card my-4">
+        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+          <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+            <h6 class="text-white text-capitalize ps-3">Todos los productos</h6>
+          </div>
+        </div>
+        <div class="card-body px-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Categoría</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subategoría</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Marca</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cantidad</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Impuesto</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio final</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                  <th class="text-secondary opacity-7"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in products %}
+                <tr>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{product.name |capfirst}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{product.category.name |capfirst}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{product.subcategory.name |capfirst}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{product.brand.name |capfirst}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{product.quantity}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm"> $ {{product.price}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm"> {{product.taxs}} %</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm"> $ {{product.final_price}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    {% if product.status == '1' %}
+                    <span class="badge badge-sm bg-gradient-success">Disponible</span>
+                    {% endif%}
+                    {% if product.status == '2' %}
+                    <span class="badge badge-sm bg-gradient-secondary">No Disponible</span>
+                    {% endif%}
+                  </td>
+                  <td class="align-middle">
+                      <a class="btn btn-link text-dark px-3 mb-0" href="#"><i class="material-icons text-sm me-2">edit</i>Editar</a>
+                      <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="#"><i class="material-icons text-sm me-2">delete</i>Borrar</a>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="alert alert-danger alert-dismissible text-white">
+          <span class="text-sm">No hay Productos</span>
+        </div>
+      {% endif %}
+      
+    </div>
+    <div class="col-6">
+        <a href="#" role="button" class="btn btn-primary  btn-lg w-100">
+            Crear Producto
+      </a>
+    </div>
+  </div>
+  {% endblock %}

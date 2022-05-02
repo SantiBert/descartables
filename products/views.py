@@ -1,8 +1,9 @@
+from itertools import product
 from django.shortcuts import render
 from django.urls import reverse_lazy
 
 from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView
-from .models import Brand, Category, Subcategory
+from .models import Brand, Category, Subcategory, Product
 from .forms import CategoryForm, CategoryDeleteForm, BrandForm, BrandDeleteForm, SubCategoryForm, SubCategoryDeleteForm
 
 class IndexView(TemplateView):
@@ -119,3 +120,33 @@ class SubcategoryDeleteVIew(UpdateView):
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('subcategories_list')
     text_object_name = 'subcategory'
+    
+#Vistas de productos
+
+
+class AllProductListView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            products = Product.objects.filter(is_active=True)
+            for productline in products:
+                productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+        except:
+            products = None
+
+        context = {
+            "products": products,
+        }
+        return render(request, 'products.html', context)
+
+class ProductByCategoryListView(View):
+    def get(self, request,id, *args, **kwargs):
+        try:
+            category = Category.objects.get(id=id)
+            products = Product.objects.filter(is_active=True, category = category)
+        except:
+            products = None
+
+        context = {
+            "products": products,
+        }
+        return render(request, 'products.html', context)
