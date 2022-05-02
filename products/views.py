@@ -1,8 +1,9 @@
-from itertools import product
+
 from django.shortcuts import render
 from django.urls import reverse_lazy
-
+from django.core.paginator import Paginator
 from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView
+
 from .models import Brand, Category, Subcategory, Product
 from .forms import (CategoryForm, 
                     CategoryDeleteForm, 
@@ -21,11 +22,16 @@ class BrandListView(View):
     def get(self, request, *args, **kwargs):
         try:
             brands = Brand.objects.filter(is_active=True)
+            paginator = Paginator(brands, 10)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
         except:
             brands = None
+            page_obj = None
 
         context = {
             "brands": brands,
+            "page_obj": page_obj
         }
         return render(request, 'brands.html', context)
     
@@ -60,11 +66,17 @@ class CategoryListView(View):
             for i in range(len(categories)):
                 subcatory = list(Subcategory.objects.filter(category=i).values())
                 categories[i].subcatories = subcatory
+            
+            paginator = Paginator(categories, 10)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
         except:
             categories = None
+            page_obj = None
 
         context = {
             "categories": categories,
+            "page_obj":page_obj
         }
         return render(request, 'categories.html', context)
     
@@ -97,11 +109,17 @@ class SubcategoryListView(View):
     def get(self, request, *args, **kwargs):
         try:
             subcategories = Subcategory.objects.filter(is_active=True)
+            paginator = Paginator(subcategories, 10)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            
         except:
             subcategories = None
+            page_obj = None
 
         context = {
             "subcategories": subcategories,
+            "page_obj":page_obj,
         }
         return render(request, 'subcategories.html', context)
     
@@ -137,11 +155,16 @@ class AllProductListView(View):
             products = Product.objects.filter(is_active=True)
             for productline in products:
                 productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+            paginator = Paginator(products, 25)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
         except:
             products = None
+            page_obj = None
 
         context = {
             "products": products,
+            'page_obj': page_obj,
         }
         return render(request, 'products.html', context)
     
@@ -175,13 +198,18 @@ class ProductByCategoryListView(View):
             products = Product.objects.filter(is_active=True, category = category)
             for productline in products:
                 productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+            paginator = Paginator(products, 25)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
         except:
             category = None
             products = None
+            page_obj = None
 
         context = {
             "category": category,
             "products": products,
+            'page_obj': page_obj,
         }
         return render(request, 'products_by_category.html', context)
     
@@ -192,12 +220,17 @@ class ProductBySubcategoryListView(View):
             products = Product.objects.filter(is_active=True, subcategory = subcategory)
             for productline in products:
                 productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+            paginator = Paginator(products, 25)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
         except:
             subcategory = None
             products = None
+            page_obj = None
 
         context = {
             "subcategory": subcategory,
             "products": products,
+            'page_obj': page_obj,
         }
         return render(request, 'products_by_subcategory.html', context)
