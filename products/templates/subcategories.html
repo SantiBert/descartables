@@ -18,6 +18,7 @@
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Categoría</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Productos</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
@@ -36,6 +37,13 @@
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{subcategory.category.name |capfirst}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <a class="mb-0 text-sm" href="{% url 'products_by_subcategory' subcategory.slug subcategory.id %}">Ver productos</a>
                       </div>
                     </div>
                   </td>

@@ -4,7 +4,14 @@ from django.urls import reverse_lazy
 
 from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView
 from .models import Brand, Category, Subcategory, Product
-from .forms import CategoryForm, CategoryDeleteForm, BrandForm, BrandDeleteForm, SubCategoryForm, SubCategoryDeleteForm
+from .forms import (CategoryForm, 
+                    CategoryDeleteForm, 
+                    BrandForm, 
+                    BrandDeleteForm, 
+                    SubCategoryForm, 
+                    SubCategoryDeleteForm, 
+                    ProductForm,
+                    ProductDeleteForm)
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -137,16 +144,60 @@ class AllProductListView(View):
             "products": products,
         }
         return render(request, 'products.html', context)
+    
+class ProductCreateView(CreateView):
+    model = Product
+    template_name = 'forms/product-form.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('all_products_list')
+    
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    template_name = 'forms/product-update-form.html'
+    form_class = ProductForm
+    template_name_suffix = '_update_form'
+    success_url = reverse_lazy('all_products_list')
+    text_object_name = 'product'
+
+class ProductDeleteVIew(UpdateView):
+    model = Product
+    template_name = 'forms/product-delete.html'
+    form_class = ProductDeleteForm
+    template_name_suffix = '_update_form'
+    success_url = reverse_lazy('all_products_list')
+    text_object_name = 'product'
 
 class ProductByCategoryListView(View):
     def get(self, request,id, *args, **kwargs):
         try:
             category = Category.objects.get(id=id)
             products = Product.objects.filter(is_active=True, category = category)
+            for productline in products:
+                productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
         except:
+            category = None
             products = None
 
         context = {
+            "category": category,
             "products": products,
         }
-        return render(request, 'products.html', context)
+        return render(request, 'products_by_category.html', context)
+    
+class ProductBySubcategoryListView(View):
+    def get(self, request,id, *args, **kwargs):
+        try:
+            subcategory = Subcategory.objects.get(id=id)
+            products = Product.objects.filter(is_active=True, subcategory = subcategory)
+            for productline in products:
+                productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+        except:
+            subcategory = None
+            products = None
+
+        context = {
+            "subcategory": subcategory,
+            "products": products,
+        }
+        return render(request, 'products_by_subcategory.html', context)
