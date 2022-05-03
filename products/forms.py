@@ -6,10 +6,8 @@ class BrandForm(forms.ModelForm):
         model = Brand
         fields = ['name', 'status']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'})
-        }
-        labels = {
-            'name': 'Nombre', 'status': 'Status'
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'status':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'})
         }
         
 class BrandDeleteForm(forms.ModelForm):
@@ -22,10 +20,8 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = ['name', 'status']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'})
-        }
-        labels = {
-            'name': 'Nombre', 'status': 'Status'
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'status':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'})
         }
         
 class CategoryDeleteForm(forms.ModelForm):
@@ -39,10 +35,9 @@ class SubCategoryForm(forms.ModelForm):
         model = Subcategory
         fields = ['name', 'status', 'category']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'})
-        }
-        labels = {
-            'name': 'Nombre', 'status': 'Status', 'category':'Categoría'
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'status':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'}),
+            'category':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'})
         }
         
 class SubCategoryDeleteForm(forms.ModelForm):
@@ -55,17 +50,21 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = [ 'name', 'brand','category', 'subcategory', 'price' , 'code' ,'quantity' , 'description' ,'taxs', 'status']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'}),
-            'code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Codígo'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Precio'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Cantidad'}),
-            'taxs': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Impuestos'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Descripción'}),
-            'status': forms.Select()
+            'name': forms.TextInput(attrs={'class': 'form-control',}),
+            'code': forms.TextInput(attrs={'class': 'form-control',}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', }),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control',}),
+            'taxs': forms.NumberInput(attrs={'class': 'form-control', }),
+            'description': forms.Textarea(attrs={'class': 'form-control',}),
+            'category':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'}),
+            'subcategory':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'}),
+            'status': forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'})
         }
+        """
         labels = {
             'name': 'Nombre', 'status': 'Status', 'category':'Categoría', 'subcategory':'Subcategoría', 'price':'Precio' , 'code':'Codígo' ,'quantity':'Cantidad' , 'description':'Descripción' ,'taxs':'Inpuestos', 'status':'Status'
         }
+        """
         
 class ProductDeleteForm(forms.ModelForm):
      class Meta:
