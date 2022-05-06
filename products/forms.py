@@ -56,6 +56,7 @@ class ProductForm(forms.ModelForm):
             'quantity': forms.NumberInput(attrs={'class': 'form-control',}),
             'taxs': forms.NumberInput(attrs={'class': 'form-control', }),
             'description': forms.Textarea(attrs={'class': 'form-control',}),
+            'brand':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'}),
             'category':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'}),
             'subcategory':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'}),
             'status': forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'})

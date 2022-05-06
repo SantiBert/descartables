@@ -65,7 +65,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
     price = models.FloatField(max_length=100,verbose_name = "precio")
-    code = models.CharField(max_length=10, null=True, blank=True,verbose_name = "código")
+    code = models.CharField(max_length=10, unique=True, null=True, blank=True,verbose_name = "código")
     #image = models.ImageField(upload_to="media/product/images/")
     quantity = models.IntegerField(default=0, verbose_name = "cantidad")
     description = models.TextField(null=True, blank=True, verbose_name = "descripción")
