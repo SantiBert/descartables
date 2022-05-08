@@ -31,7 +31,7 @@ class CategoryDeleteForm(forms.ModelForm):
         
 
 class SubCategoryForm(forms.ModelForm):
-     class Meta:
+    class Meta:
         model = Subcategory
         fields = ['name', 'status', 'category']
         widgets = {
@@ -39,7 +39,11 @@ class SubCategoryForm(forms.ModelForm):
             'status':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'}),
             'category':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'})
         }
-        
+
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].queryset = Category.objects.filter(status=1, is_active=1)
+
 class SubCategoryDeleteForm(forms.ModelForm):
      class Meta:
         model = Subcategory
@@ -61,7 +65,7 @@ class ProductForm(forms.ModelForm):
             'subcategory':  forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'}),
             'status': forms.Select(attrs={'class': 'form-control', 'id':'exampleFormControlSelect1'})
         }
-        
+
     def __init__(self,*args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.filter(status=1, is_active=1)
