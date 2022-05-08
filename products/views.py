@@ -63,10 +63,9 @@ class CategoryListView(View):
     def get(self, request, *args, **kwargs):
         try:
             categories = Category.objects.filter(is_active=True)
-            for i in range(len(categories)):
-                subcatory = list(Subcategory.objects.filter(category=i).values())
-                categories[i].subcatories = subcatory
-            
+            for categoryline in categories:
+                subcatory = list(Subcategory.objects.filter(category=categoryline).values())
+                categoryline.subcatories = subcatory                          
             paginator = Paginator(categories, 10)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
