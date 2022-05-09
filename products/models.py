@@ -69,7 +69,7 @@ class Product(models.Model):
     #image = models.ImageField(upload_to="media/product/images/")
     quantity = models.IntegerField(default=0, verbose_name = "cantidad")
     description = models.TextField(null=True, blank=True, verbose_name = "descripción")
-    taxs = models.FloatField(max_length=100, null=True, blank=True, verbose_name="IVA")
+    taxs = models.FloatField(max_length=100, default=0, null=True, blank=True, verbose_name="IVA")
     status = models.CharField(max_length=10, choices=CHOICES)
     created_date = models.DateTimeField(default=timezone.now, verbose_name = "fecha de creación")
     is_active = models.BooleanField(default=True)
