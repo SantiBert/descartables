@@ -67,7 +67,13 @@
                   <td>
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">{{product.tag.name |capfirst}}</h6>
+                        <h6 class="mb-0 text-sm">
+                          {% for tag in product.tag.all %}
+                            {% if tag.status == "1" and tag.is_active %}
+                              {{tag.name |capfirst}} &nbsp
+                            {% endif %}
+                          {% endfor %}
+                        </h6>
                       </div>
                     </div>
                   </td>
