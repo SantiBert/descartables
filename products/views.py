@@ -4,13 +4,11 @@ from django.urls import reverse_lazy
 from django.core.paginator import Paginator
 from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView
 
-from .models import Brand, Category, Subcategory, Product
+from .models import Brand, Category, Product
 from .forms import (CategoryForm, 
                     CategoryDeleteForm, 
                     BrandForm, 
                     BrandDeleteForm, 
-                    SubCategoryForm, 
-                    SubCategoryDeleteForm, 
                     ProductForm,
                     ProductDeleteForm)
 
@@ -63,9 +61,6 @@ class CategoryListView(View):
     def get(self, request, *args, **kwargs):
         try:
             categories = Category.objects.filter(is_active=True)
-            for categoryline in categories:
-                subcatory = list(Subcategory.objects.filter(category=categoryline).values())
-                categoryline.subcatories = subcatory                          
             paginator = Paginator(categories, 10)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
@@ -101,50 +96,8 @@ class CategoryDeleteVIew(UpdateView):
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('categories_list')
     text_object_name = 'category'
-    
-    
-#Vistas de subcategorias
-class SubcategoryListView(View):
-    def get(self, request, *args, **kwargs):
-        try:
-            subcategories = Subcategory.objects.filter(is_active=True)
-            paginator = Paginator(subcategories, 10)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-            
-        except:
-            subcategories = None
-            page_obj = None
 
-        context = {
-            "subcategories": subcategories,
-            "page_obj":page_obj,
-        }
-        return render(request, 'subcategories.html', context)
-    
-class CreateSubcategoryView(CreateView):
-    model = Subcategory
-    template_name = 'forms/subcategory-form.html'
-    form_class = SubCategoryForm
-    success_url = reverse_lazy('subcategories_list')
-    
 
-class SubcategoryUpdateView(UpdateView):
-    model = Subcategory
-    template_name = 'forms/subcategory-update-form.html'
-    form_class = SubCategoryForm
-    template_name_suffix = '_update_form'
-    success_url = reverse_lazy('subcategories_list')
-    text_object_name = 'subcategory'
-
-class SubcategoryDeleteVIew(UpdateView):
-    model = Subcategory
-    template_name = 'forms/subcategory-delete.html'
-    form_class = SubCategoryDeleteForm
-    template_name_suffix = '_update_form'
-    success_url = reverse_lazy('subcategories_list')
-    text_object_name = 'subcategory'
-    
 #Vistas de productos
 
 
@@ -211,25 +164,3 @@ class ProductByCategoryListView(View):
             'page_obj': page_obj,
         }
         return render(request, 'products_by_category.html', context)
-    
-class ProductBySubcategoryListView(View):
-    def get(self, request,id, *args, **kwargs):
-        try:
-            subcategory = Subcategory.objects.get(id=id)
-            products = Product.objects.filter(is_active=True, subcategory = subcategory)
-            for productline in products:
-                productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
-            paginator = Paginator(products, 25)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-        except:
-            subcategory = None
-            products = None
-            page_obj = None
-
-        context = {
-            "subcategory": subcategory,
-            "products": products,
-            'page_obj': page_obj,
-        }
-        return render(request, 'products_by_subcategory.html', context)
