@@ -28,7 +28,6 @@ class TagDeleteForm(forms.ModelForm):
      class Meta:
         model = Tag
         fields = ['is_active']
-        
 
         
 class ProductForm(forms.ModelForm):
