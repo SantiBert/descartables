@@ -1,6 +1,6 @@
 {% extends 'index.html' %}
 {% load static %}
-{% block title %}Categorias{% endblock %}
+{% block title %}Tags{% endblock %}
 {% block content %}
 <div class="row">
   <nav aria-label="Page navigation example">
@@ -31,11 +31,11 @@
     </ul>
   </nav>
     <div class="col-12">
-        {% if categories %}
+        {% if tags %}
       <div class="card my-4">
         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
           <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-            <h6 class="text-white text-capitalize ps-3">Categorías</h6>
+            <h6 class="text-white text-capitalize ps-3">Tags</h6>
           </div>
         </div>
         <div class="card-body px-0 pb-2">
@@ -50,31 +50,31 @@
                 </tr>
               </thead>
               <tbody>
-                {% for category in categories %}
+                {% for tag in tags %}
                 <tr>
                   <td>
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">{{category.name |capfirst}}</h6>
+                        <h6 class="mb-0 text-sm">{{tag.name |capfirst}}</h6>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <a class="btn btn-info" role="button" href="{% url 'products_by_category' category.slug category.id %}">
+                    <a class="btn btn-info" role="button" href="{% url 'products_by_tag' tag.slug tag.id %}">
                       Ver Productos
                     </a>
                   </td>
                   <td class="align-middle text-center text-sm">
-                    {% if category.status == '1' %}
+                    {% if tag.status == '1' %}
                     <span class="badge badge-sm bg-gradient-success">Disponible</span>
                     {% endif%}
-                    {% if category.status == '2' %}
+                    {% if tag.status == '2' %}
                     <span class="badge badge-sm bg-gradient-secondary">No Disponible</span>
                     {% endif%}
                   </td>
                   <td class="align-middle">
-                      <a class="btn btn-link text-dark px-3 mb-0" href="{% url 'category_update' category.slug %}"><i class="material-icons text-sm me-2">edit</i>Editar</a>
-                      <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="{% url 'category_delete' category.slug %}"><i class="material-icons text-sm me-2">delete</i>Borrar</a>
+                      <a class="btn btn-link text-dark px-3 mb-0" href="{% url 'tag_update' tag.slug %}"><i class="material-icons text-sm me-2">edit</i>Editar</a>
+                      <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="{% url 'tag_delete' tag.slug %}"><i class="material-icons text-sm me-2">delete</i>Borrar</a>
                   </td>
                 </tr>
               {% endfor %}
@@ -91,8 +91,8 @@
       
     </div>
     <div class="col-6">
-        <a href="{% url 'category_create' %}" role="button" class="btn btn-primary  btn-lg w-100">
-            Crear Categoria
+        <a href="{% url 'tag_create' %}" role="button" class="btn btn-primary  btn-lg w-100">
+            Crear Tag
       </a>
     </div>
   </div>

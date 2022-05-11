@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from products.models import Brand, Category, Subcategory, Product
+from products.models import Brand, Tag, Subtag, Product
 
 default_brand = [
     {
@@ -16,7 +16,7 @@ default_brand = [
     }
 ]
 
-default_category = [
+default_tag = [
     {
         "name": "Plasticos",
         "status": "Disponible",
@@ -31,7 +31,7 @@ default_category = [
     }
 ]
 
-default_subcategory = [
+default_subtag = [
     {
         "name": "SubPlasticos",
         "status": "Disponible",

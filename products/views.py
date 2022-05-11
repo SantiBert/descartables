@@ -4,9 +4,9 @@ from django.urls import reverse_lazy
 from django.core.paginator import Paginator
 from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView
 
-from .models import Brand, Category, Product
-from .forms import (CategoryForm, 
-                    CategoryDeleteForm, 
+from .models import Brand, Tag, Product
+from .forms import (TagForm, 
+                    TagDeleteForm, 
                     BrandForm, 
                     BrandDeleteForm, 
                     ProductForm,
@@ -56,46 +56,46 @@ class BrandDeleteVIew(UpdateView):
     success_url = reverse_lazy('brands_list')
     text_object_name = 'brand'
 
-#Vistas de Categorias
-class CategoryListView(View):
+#Vistas de Tags
+class TagListView(View):
     def get(self, request, *args, **kwargs):
         try:
-            categories = Category.objects.filter(is_active=True)
-            paginator = Paginator(categories, 10)
+            tags = Tag.objects.filter(is_active=True)
+            paginator = Paginator(tags, 10)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
         except:
-            categories = None
+            tags = None
             page_obj = None
 
         context = {
-            "categories": categories,
+            "tags": tags,
             "page_obj":page_obj
         }
-        return render(request, 'categories.html', context)
+        return render(request, 'tags.html', context)
     
-class CreateCategoryView(CreateView):
-    model = Category
-    template_name = 'forms/category-form.html'
-    form_class = CategoryForm
-    success_url = reverse_lazy('categories_list')
+class CreateTagView(CreateView):
+    model = Tag
+    template_name = 'forms/tag-form.html'
+    form_class = TagForm
+    success_url = reverse_lazy('tags_list')
     
 
-class CategoryUpdateView(UpdateView):
-    model = Category
-    template_name = 'forms/category-update-form.html'
-    form_class = CategoryForm
+class TagUpdateView(UpdateView):
+    model = Tag
+    template_name = 'forms/tag-update-form.html'
+    form_class = TagForm
     template_name_suffix = '_update_form'
-    success_url = reverse_lazy('categories_list')
-    text_object_name = 'category'
+    success_url = reverse_lazy('tags_list')
+    text_object_name = 'tag'
 
-class CategoryDeleteVIew(UpdateView):
-    model = Category
-    template_name = 'forms/category-delete.html'
-    form_class = CategoryDeleteForm
+class TagDeleteVIew(UpdateView):
+    model = Tag
+    template_name = 'forms/tag-delete.html'
+    form_class = TagDeleteForm
     template_name_suffix = '_update_form'
-    success_url = reverse_lazy('categories_list')
-    text_object_name = 'category'
+    success_url = reverse_lazy('tags_list')
+    text_object_name = 'tag'
 
 
 #Vistas de productos
@@ -143,24 +143,24 @@ class ProductDeleteVIew(UpdateView):
     success_url = reverse_lazy('all_products_list')
     text_object_name = 'product'
 
-class ProductByCategoryListView(View):
+class ProductByTagListView(View):
     def get(self, request,id, *args, **kwargs):
         try:
-            category = Category.objects.get(id=id)
-            products = Product.objects.filter(is_active=True, category = category)
+            tag = Tag.objects.get(id=id)
+            products = Product.objects.filter(is_active=True, tag = tag)
             for productline in products:
                 productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
             paginator = Paginator(products, 25)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
         except:
-            category = None
+            tag = None
             products = None
             page_obj = None
 
         context = {
-            "category": category,
+            "tag": tag,
             "products": products,
             'page_obj': page_obj,
         }
-        return render(request, 'products_by_category.html', context)
+        return render(request, 'products_by_tag.html', context)

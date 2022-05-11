@@ -26,7 +26,7 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
-class Category(models.Model):
+class Tag(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
@@ -35,8 +35,8 @@ class Category(models.Model):
     is_active = models.BooleanField(default=True)
     
     class Meta:
-        verbose_name = "categoría"
-        verbose_name_plural = "categorías"
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
     
     def __str__(self):
         return self.name
@@ -45,7 +45,7 @@ class Category(models.Model):
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT,verbose_name = "marca",null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name = "categoría")
+    tag = models.ManyToManyField(Tag, verbose_name = "Tag")
     name = models.CharField(max_length=255, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
     price = models.FloatField(max_length=100,verbose_name = "precio")
