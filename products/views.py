@@ -12,10 +12,13 @@ from .forms import (TagForm,
                     ProductForm,
                     ProductDeleteForm)
 
+
 class IndexView(TemplateView):
     template_name = 'index.html'
     
+
 #Vistas de Marcas
+
 class BrandListView(View):
     def get(self, request, *args, **kwargs):
         try:
@@ -33,6 +36,7 @@ class BrandListView(View):
         }
         return render(request, 'brands.html', context)
     
+
 class CreateBrandView(CreateView):
     model = Brand
     template_name = 'forms/brand-form.html'
@@ -48,6 +52,7 @@ class BrandUpdateView(UpdateView):
     success_url = reverse_lazy('brands_list')
     text_object_name = 'brand'
 
+
 class BrandDeleteVIew(UpdateView):
     model = Brand
     template_name = 'forms/brand-delete.html'
@@ -56,7 +61,9 @@ class BrandDeleteVIew(UpdateView):
     success_url = reverse_lazy('brands_list')
     text_object_name = 'brand'
 
+
 #Vistas de Tags
+
 class TagListView(View):
     def get(self, request, *args, **kwargs):
         try:
@@ -74,6 +81,7 @@ class TagListView(View):
         }
         return render(request, 'tags.html', context)
     
+
 class CreateTagView(CreateView):
     model = Tag
     template_name = 'forms/tag-form.html'
@@ -89,6 +97,7 @@ class TagUpdateView(UpdateView):
     success_url = reverse_lazy('tags_list')
     text_object_name = 'tag'
 
+
 class TagDeleteVIew(UpdateView):
     model = Tag
     template_name = 'forms/tag-delete.html'
@@ -99,7 +108,6 @@ class TagDeleteVIew(UpdateView):
 
 
 #Vistas de productos
-
 
 class AllProductListView(View):
     def get(self, request, *args, **kwargs):
@@ -120,6 +128,7 @@ class AllProductListView(View):
         }
         return render(request, 'products.html', context)
     
+
 class ProductCreateView(CreateView):
     model = Product
     template_name = 'forms/product-form.html'
@@ -135,6 +144,7 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy('all_products_list')
     text_object_name = 'product'
 
+
 class ProductDeleteVIew(UpdateView):
     model = Product
     template_name = 'forms/product-delete.html'
@@ -142,6 +152,7 @@ class ProductDeleteVIew(UpdateView):
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('all_products_list')
     text_object_name = 'product'
+
 
 class ProductByTagListView(View):
     def get(self, request,id, *args, **kwargs):
