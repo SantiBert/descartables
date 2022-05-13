@@ -1,8 +1,9 @@
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator
 from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView
+from django.db.models import Q
 
 from .models import Brand, Tag, Product
 from .forms import (TagForm, 
@@ -127,6 +128,21 @@ class AllProductListView(View):
             'page_obj': page_obj,
         }
         return render(request, 'products.html', context)
+
+    def post(self, request, *args, **kwargs):
+        queryset = request.POST.get("buscar") 
+        if queryset: 
+            products = Product.objects.filter( 
+                Q(name__icontains=queryset) | Q(tag__name__icontains=queryset),                
+                status="1",
+                is_active=True 
+            ).distinct()
+        else:
+            return self.get(request)
+        context = { 
+            "products": products, 
+        } 
+        return render(request, 'products.html', context)
     
 
 class ProductCreateView(CreateView):
@@ -145,7 +161,7 @@ class ProductUpdateView(UpdateView):
     text_object_name = 'product'
 
 
-class ProductDeleteVIew(UpdateView):
+class ProductDeleteView(UpdateView):
     model = Product
     template_name = 'forms/product-delete.html'
     form_class = ProductDeleteForm
@@ -155,7 +171,7 @@ class ProductDeleteVIew(UpdateView):
 
 
 class ProductByTagListView(View):
-    def get(self, request,id, *args, **kwargs):
+    def get(self, request, id, *args, **kwargs):
         try:
             tag = Tag.objects.get(id=id)
             products = Product.objects.filter(is_active=True, tag = tag)
