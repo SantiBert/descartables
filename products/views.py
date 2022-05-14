@@ -133,7 +133,8 @@ class AllProductListView(View):
         queryset = request.POST.get("buscar") 
         if queryset: 
             products = Product.objects.filter( 
-                Q(name__icontains=queryset) | Q(tag__name__icontains=queryset),                
+                Q(name__icontains=queryset) | 
+                Q(tag__name__icontains=queryset, tag__status="1", tag__is_active=True),                
                 status="1",
                 is_active=True 
             ).distinct()
