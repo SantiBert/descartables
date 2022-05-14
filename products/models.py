@@ -4,16 +4,25 @@ from django.db import models
 
 from autoslug import AutoSlugField
 
-capitalizeFirstChar = lambda s: s[:1].upper() + s[1:]
 
 CHOICES = (
 	("1", "Disponible"),
 	("2", "No disponible")
 )
 
+
+class NameField(models.CharField):
+    def __init__(self, *args, **kwargs):
+        super(NameField, self).__init__(*args, **kwargs)
+
+    def get_prep_value(self, value):
+        name = value[:1].upper() + value[1:].lower()
+        return name
+
+
 class Brand(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255,verbose_name = "nombre", unique=True)
+    name = NameField(max_length=255,verbose_name = "nombre", unique=True)
     slug = AutoSlugField(populate_from='name')
     status = models.CharField(max_length=10, choices=CHOICES)
     created_date = models.DateTimeField(default=timezone.now, verbose_name = "fecha de creación")
@@ -22,13 +31,14 @@ class Brand(models.Model):
     class Meta:
         verbose_name = "marca"
         verbose_name_plural = "marcas"
-    
+        
     def __str__(self):
         return self.name
 
+
 class Tag(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, unique=True, verbose_name = "nombre")
+    name = NameField(max_length=255, unique=True, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
     status = models.CharField(max_length=10, choices=CHOICES)
     created_date = models.DateTimeField(default=timezone.now,verbose_name = "fecha de creación")
@@ -46,7 +56,7 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True)
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT,verbose_name = "marca",null=True, blank=True)
     tag = models.ManyToManyField(Tag, verbose_name = "Tag")
-    name = models.CharField(max_length=255, verbose_name = "nombre")
+    name = NameField(max_length=255, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
     price = models.FloatField(max_length=100,verbose_name = "precio")
     code = models.CharField(max_length=10, unique=True, null=True, blank=True,verbose_name = "código")
@@ -65,6 +75,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)
@@ -80,6 +91,7 @@ class Order(models.Model):
     status = models.IntegerField()
     created_date = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
+
 
 class OrderItem(models.Model):
     id = models.AutoField(primary_key=True)

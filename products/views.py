@@ -1,8 +1,9 @@
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator
 from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView
+from django.db.models import Q
 
 from .models import Brand, Tag, Product
 from .forms import (TagForm, 
@@ -12,10 +13,13 @@ from .forms import (TagForm,
                     ProductForm,
                     ProductDeleteForm)
 
+
 class IndexView(TemplateView):
     template_name = 'index.html'
     
+
 #Vistas de Marcas
+
 class BrandListView(View):
     def get(self, request, *args, **kwargs):
         try:
@@ -33,6 +37,7 @@ class BrandListView(View):
         }
         return render(request, 'brands.html', context)
     
+
 class CreateBrandView(CreateView):
     model = Brand
     template_name = 'forms/brand-form.html'
@@ -48,6 +53,7 @@ class BrandUpdateView(UpdateView):
     success_url = reverse_lazy('brands_list')
     text_object_name = 'brand'
 
+
 class BrandDeleteVIew(UpdateView):
     model = Brand
     template_name = 'forms/brand-delete.html'
@@ -56,7 +62,9 @@ class BrandDeleteVIew(UpdateView):
     success_url = reverse_lazy('brands_list')
     text_object_name = 'brand'
 
+
 #Vistas de Tags
+
 class TagListView(View):
     def get(self, request, *args, **kwargs):
         try:
@@ -74,6 +82,7 @@ class TagListView(View):
         }
         return render(request, 'tags.html', context)
     
+
 class CreateTagView(CreateView):
     model = Tag
     template_name = 'forms/tag-form.html'
@@ -89,6 +98,7 @@ class TagUpdateView(UpdateView):
     success_url = reverse_lazy('tags_list')
     text_object_name = 'tag'
 
+
 class TagDeleteVIew(UpdateView):
     model = Tag
     template_name = 'forms/tag-delete.html'
@@ -99,7 +109,6 @@ class TagDeleteVIew(UpdateView):
 
 
 #Vistas de productos
-
 
 class AllProductListView(View):
     def get(self, request, *args, **kwargs):
@@ -119,7 +128,23 @@ class AllProductListView(View):
             'page_obj': page_obj,
         }
         return render(request, 'products.html', context)
+
+    def post(self, request, *args, **kwargs):
+        queryset = request.POST.get("buscar") 
+        if queryset: 
+            products = Product.objects.filter( 
+                Q(name__icontains=queryset) | Q(tag__name__icontains=queryset),                
+                status="1",
+                is_active=True 
+            ).distinct()
+        else:
+            return self.get(request)
+        context = { 
+            "products": products, 
+        } 
+        return render(request, 'products.html', context)
     
+
 class ProductCreateView(CreateView):
     model = Product
     template_name = 'forms/product-form.html'
@@ -135,7 +160,8 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy('all_products_list')
     text_object_name = 'product'
 
-class ProductDeleteVIew(UpdateView):
+
+class ProductDeleteView(UpdateView):
     model = Product
     template_name = 'forms/product-delete.html'
     form_class = ProductDeleteForm
@@ -143,8 +169,9 @@ class ProductDeleteVIew(UpdateView):
     success_url = reverse_lazy('all_products_list')
     text_object_name = 'product'
 
+
 class ProductByTagListView(View):
-    def get(self, request,id, *args, **kwargs):
+    def get(self, request, id, *args, **kwargs):
         try:
             tag = Tag.objects.get(id=id)
             products = Product.objects.filter(is_active=True, tag = tag)

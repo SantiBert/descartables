@@ -12,7 +12,7 @@ from .views import (IndexView,
                     AllProductListView,
                     ProductCreateView,
                     ProductUpdateView,
-                    ProductDeleteVIew,
+                    ProductDeleteView,
                     ProductByTagListView,
                     )
 
@@ -33,5 +33,5 @@ urlpatterns = [
     path('todos-los-productos/', AllProductListView.as_view(), name='all_products_list'),
     path('productos/crear/', ProductCreateView.as_view(), name='products_create'),
     path('productos/editar/<slug:slug>/', ProductUpdateView.as_view(), name='products_update'),
-    path('productos/eliminar/<slug:slug>/', ProductDeleteVIew.as_view(), name='products_delete'),
+    path('productos/eliminar/<slug:slug>/', ProductDeleteView.as_view(), name='products_delete'),
 ]

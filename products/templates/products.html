@@ -40,6 +40,13 @@
         </div>
         <div class="card-body px-0 pb-2">
           <div class="table-responsive p-0">
+            <form method="POST" action="{%url 'all_products_list'%}"> 
+              <div class="form-inline my-2 my-lg-0"> {% csrf_token %} 
+                <input class="form-control mr-sm-2" type="text" name="buscar" placeholder="Buscar"> 
+                <button class="btn btn-primary" 
+                ="submit">Buscar</button>
+              </div> 
+            </form>    
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
