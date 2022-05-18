@@ -15,8 +15,55 @@ from .forms import (TagForm,
 
 
 class IndexView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'dashboard.html'
     
+class ChangePriceByTagView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            tags = Tag.objects.filter(is_active=True)
+        except:
+            tags = None
+
+        context = {
+            "tags": tags
+        }
+        return render(request,'upgradates/change_price_by_tags.html', context)
+    
+class ChangeIVAByTagView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            tags = Tag.objects.filter(is_active=True)
+        except:
+            tags = None
+
+        context = {
+            "tags": tags
+        }
+        return render(request,'upgradates/change_iva_by_tags.html', context)
+
+class ChangePriceByBrandView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            brands = Brand.objects.filter(is_active=True)
+        except:
+            brands = None
+
+        context = {
+            "brands": brands
+        }
+        return render(request,'upgradates/change_price_by_brand.html', context)
+
+class ChangeIVAByBrandView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            brands = Brand.objects.filter(is_active=True)
+        except:
+            brands = None
+
+        context = {
+            "brands": brands
+        }
+        return render(request,'upgradates/change_iva_by_brands.html', context)
 
 #Vistas de Marcas
 

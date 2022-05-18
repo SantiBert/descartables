@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'products',
     'rest_framework',
+    'import_export',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

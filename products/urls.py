@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.urls import path
-from .views import (IndexView, 
+from .views import (IndexView,
+                    ChangePriceByTagView,                   
+                    ChangeIVAByTagView,
+                    ChangePriceByBrandView,
+                    ChangeIVAByBrandView,
                     BrandListView,
                     CreateBrandView,
                     BrandUpdateView,
@@ -18,6 +22,10 @@ from .views import (IndexView,
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
+    path('change-price-by-tags/', ChangePriceByTagView.as_view(), name='change_price_by_tags'),
+    path('change-iva-by-tags/', ChangeIVAByTagView.as_view(), name='change_iva_by_tags'),
+    path('change-price-by-brand/', ChangePriceByBrandView.as_view(), name='change_price_by_brand'),
+    path('change-iva-by-brand/', ChangeIVAByBrandView.as_view(), name='change_iva_by_brand'),
     #Marcas
     path('marcas/', BrandListView.as_view(), name='brands_list'),
     path('marcas/crear/', CreateBrandView.as_view(), name='brand_create'),
