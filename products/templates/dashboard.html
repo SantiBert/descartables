@@ -1,0 +1,26 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container">  
+    <h2 class="text-center">Administración</h2>
+    <div class="container d-flex justify-content-center aling-items-center h-100">
+        <div class="row">
+            <div class="col-md-4">
+                <a href="{% url 'change_price_by_tags' %}" class="btn btn-info btn-lg">Cambiar precio por Tag</a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'change_iva_by_tags' %}" class="btn btn-info btn-lg">Cambiar IVA por Tag</a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'change_price_by_brand' %}" class="btn btn-info btn-lg">Cambiar precio por Marca</a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'change_iva_by_brand' %}" class="btn btn-info btn-lg">Cambiar IVA por Marca</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extrascript %}
+{% endblock %}

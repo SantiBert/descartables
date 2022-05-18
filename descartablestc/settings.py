@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+from .util_settings import *
 from pathlib import Path
 from .util_settings import *
 import os
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'products',
     'rest_framework',
+    'import_export',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
