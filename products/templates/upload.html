@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}Subir archivo{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="p-4">
+                <form action="" method="post" enctype='multipart/form-data'>{% csrf_token %}
+                 {{form.as_p}}
+                  <button type="submit" class="btn bg-gradient-primary">Subir</button>
+                </form>
+              </div>
+        <div>
+    </div>
+{% endblock %}

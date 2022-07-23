@@ -18,6 +18,7 @@ from .views import (IndexView,
                     ProductUpdateView,
                     ProductDeleteView,
                     ProductByTagListView,
+                    UploadFileView,
                     )
 
 urlpatterns = [
@@ -42,4 +43,6 @@ urlpatterns = [
     path('productos/crear/', ProductCreateView.as_view(), name='products_create'),
     path('productos/editar/<slug:slug>/', ProductUpdateView.as_view(), name='products_update'),
     path('productos/eliminar/<slug:slug>/', ProductDeleteView.as_view(), name='products_delete'),
+    #
+    path('subir-archivo/',UploadFileView.as_view(),name='upload_file')
 ]
