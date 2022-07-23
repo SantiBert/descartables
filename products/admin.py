@@ -7,7 +7,7 @@ from import_export.admin import ImportExportModelAdmin
 class ProductResourseces(resources.ModelResource):
     class Meta:
         model = Product
-        fields = ('name','price','quantity','taxs')
+        fields = ('id','name','price','quantity','taxs','status')
 
 
 class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):

@@ -60,3 +60,10 @@ class ProductDeleteForm(forms.ModelForm):
      class Meta:
         model = Product
         fields = ['is_active']
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
+    
+class ChagePriceByTagForm(forms.Form):
+    tags = forms.ModelChoiceField(queryset=Tag.objects.all())
+    price = forms.IntegerField()

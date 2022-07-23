@@ -59,7 +59,7 @@ class Tag(models.Model):
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT,verbose_name = "marca",null=True, blank=True)
-    tag = models.ManyToManyField(Tag, verbose_name = "Tag")
+    tag = models.ManyToManyField(Tag, verbose_name = "Tag", blank=True)
     name = NameField(max_length=255, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
     price = models.FloatField(max_length=100,verbose_name = "precio")
@@ -68,7 +68,7 @@ class Product(models.Model):
     quantity = models.IntegerField(default=0, verbose_name = "cantidad")
     description = models.TextField(null=True, blank=True, verbose_name = "descripción")
     taxs = models.FloatField(max_length=100, default=0, null=True, blank=True, verbose_name="IVA")
-    status = models.CharField(max_length=10, choices=CHOICES)
+    status = models.CharField(max_length=10, choices=CHOICES, default="1")
     created_date = models.DateTimeField(default=timezone.now, verbose_name = "fecha de creación")
     upgrated_date = models.DateField(verbose_name ='Fecha de modificacion', auto_now=True, auto_now_add=False)
     delete_date = models.DateField(verbose_name ='Feacha de eliminacion', auto_now=True, auto_now_add=False)

@@ -1,6 +1,8 @@
+import pandas as pd
 
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
 from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView
 from django.db.models import Q
@@ -11,23 +13,29 @@ from .forms import (TagForm,
                     BrandForm, 
                     BrandDeleteForm, 
                     ProductForm,
-                    ProductDeleteForm)
+                    ProductDeleteForm,
+                    UploadFileForm,
+                    ChagePriceByTagForm)
 
 
 class IndexView(TemplateView):
     template_name = 'dashboard.html'
     
-class ChangePriceByTagView(View):
-    def get(self, request, *args, **kwargs):
-        try:
-            tags = Tag.objects.filter(is_active=True)
-        except:
-            tags = None
+class ChangePriceByTagView(FormView):
+    form_class = ChagePriceByTagForm
+    template_name = 'upgradates/change_price_by_tags.html'
+    success_url = reverse_lazy('index')
+    
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            prince = form.cleaned_data.get('price')
+            tags = form.cleaned_data.get('tags')
+            print(prince, tags)
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
-        context = {
-            "tags": tags
-        }
-        return render(request,'upgradates/change_price_by_tags.html', context)
     
 class ChangeIVAByTagView(View):
     def get(self, request, *args, **kwargs):
@@ -239,3 +247,39 @@ class ProductByTagListView(View):
             'page_obj': page_obj,
         }
         return render(request, 'products_by_tag.html', context)
+"""    
+class UploadFileView(View):
+    template_name = "upload.html"
+    form_class = UploadFileForm
+    success_url = reverse_lazy('all_products_list')
+    
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        file = request.FILES('file_field')
+        if form.is_valid():
+            data = pd.read_csv(file, header=0, encoding="UTF-8")
+            print(data)
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+"""
+
+class UploadFileView(FormView):
+    
+    template_name = 'upload.html'
+    form_class = UploadFileForm
+    success_url = reverse_lazy('all_products_list')
+    
+    def post(self,request, *args, **kwarg):
+        if request.method == 'POST':
+            form = UploadFileForm(request.POST, request.FILES)
+            if form.is_valid():
+                file = request.FILES['file']
+                data = pd.read_csv(file, header=0, encoding="UTF-8")
+                print(data)
+        else:
+            form = UploadFileForm()
+        return render(request, 'upload.html', {'form': form})
+        
+ 
