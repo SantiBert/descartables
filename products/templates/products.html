@@ -30,6 +30,18 @@
       {% endif %}
     </ul>
   </nav>
+
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible text-white" role="alert">
+      <span class="text-sm">{{ message }}</span>
+      <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  {% endif %}
+
     <div class="col-12">
         {% if products %}
       <div class="card my-4">
@@ -123,8 +135,8 @@
                     {% endif%}
                   </td>
                   <td class="align-middle">
-                      <a class="btn btn-link text-dark px-3 mb-0" href="{% url 'products_update' product.slug %}"><i class="material-icons text-sm me-2">edit</i>Editar</a>
-                      <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="{% url 'products_delete' product.slug %}"><i class="material-icons text-sm me-2">delete</i>Borrar</a>
+                      <a class="btn btn-link text-dark px-3 mb-0" href="{% url 'products_update' product.id %}"><i class="material-icons text-sm me-2">edit</i>Editar</a>
+                      <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="{% url 'products_delete' product.id %}"><i class="material-icons text-sm me-2">delete</i>Borrar</a>
                   </td>
                 </tr>
               {% endfor %}

@@ -40,13 +40,11 @@ class Tag(models.Model):
     id = models.AutoField(primary_key=True)
     name = NameField(max_length=255, unique=True, verbose_name = "nombre")
     slug = AutoSlugField(populate_from='name')
-    status = models.CharField(max_length=10, choices=CHOICES)
+    status = models.CharField(max_length=10, choices=CHOICES,default="1")
     created_date = models.DateTimeField(default=timezone.now,verbose_name = "fecha de creación")
     upgrated_date = models.DateField(verbose_name ='Fecha de modificacion', auto_now=True, auto_now_add=False)
     delete_date = models.DateField(verbose_name ='Feacha de eliminacion', auto_now=True, auto_now_add=False)
     is_active = models.BooleanField(default=True)
-   
-
     
     class Meta:
         verbose_name = "Tag"
