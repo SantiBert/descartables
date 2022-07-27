@@ -1,11 +1,13 @@
 import pandas as pd
+import openpyxl
 
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
-from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView
+from django.views.generic import TemplateView,View, CreateView, UpdateView, UpdateView, FormView, ListView
 from django.db.models import Q
+from django.contrib.messages.views import SuccessMessageMixin
 
 from .models import Brand, Tag, Product
 from .forms import (TagForm, 
@@ -120,23 +122,13 @@ class BrandDeleteVIew(UpdateView):
 
 #Vistas de Tags
 
-class TagListView(View):
-    def get(self, request, *args, **kwargs):
-        try:
-            tags = Tag.objects.filter(is_active=True)
-            paginator = Paginator(tags, 10)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-        except:
-            tags = None
-            page_obj = None
 
-        context = {
-            "tags": tags,
-            "page_obj":page_obj
-        }
-        return render(request, 'tags.html', context)
-    
+class TagListView(ListView):
+    model = Tag
+    template_name = 'tags.html'
+    context_object_name = "tags" 
+    paginate_by = 10 
+
 
 class CreateTagView(CreateView):
     model = Tag
@@ -165,25 +157,21 @@ class TagDeleteVIew(UpdateView):
 
 #Vistas de productos
 
-class AllProductListView(View):
-    def get(self, request, *args, **kwargs):
-        try:
-            products = Product.objects.filter(is_active=True)
-            for productline in products:
-                productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
-            paginator = Paginator(products, 25)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-        except:
-            products = None
-            page_obj = None
+class AllProductListView(ListView):
+    
+    template_name = 'products.html'
+    #queryset = Product.objects.filter(is_active=True)
+    context_object_name = "products" 
+    paginate_by = 10 
+    
+    def get_queryset(self):
+        queryset = Product.objects.filter(is_active=True)
+        for productline in queryset:
+            productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+            
+        return queryset
 
-        context = {
-            "products": products,
-            'page_obj': page_obj,
-        }
-        return render(request, 'products.html', context)
-
+    
     def post(self, request, *args, **kwargs):
         queryset = request.POST.get("buscar") 
         if queryset: 
@@ -215,6 +203,7 @@ class ProductUpdateView(UpdateView):
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('all_products_list')
     text_object_name = 'product'
+    slug_field = 'id' 
 
 
 class ProductDeleteView(UpdateView):
@@ -247,37 +236,65 @@ class ProductByTagListView(View):
             'page_obj': page_obj,
         }
         return render(request, 'products_by_tag.html', context)
-"""    
-class UploadFileView(View):
-    template_name = "upload.html"
-    form_class = UploadFileForm
-    success_url = reverse_lazy('all_products_list')
-    
-    def post(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        file = request.FILES('file_field')
-        if form.is_valid():
-            data = pd.read_csv(file, header=0, encoding="UTF-8")
-            print(data)
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-"""
 
-class UploadFileView(FormView):
+class UploadFileView(SuccessMessageMixin,FormView):
     
     template_name = 'upload.html'
     form_class = UploadFileForm
     success_url = reverse_lazy('all_products_list')
+    success_message = 'Todos los productos se han cargado correctamente'
+    
+    
     
     def post(self,request, *args, **kwarg):
         if request.method == 'POST':
             form = UploadFileForm(request.POST, request.FILES)
             if form.is_valid():
                 file = request.FILES['file']
-                data = pd.read_csv(file, header=0, encoding="UTF-8")
-                print(data)
+                wb = openpyxl.load_workbook(file)
+                worksheet = wb["Tablib Dataset"]
+                #print(worksheet)
+                
+                excel_data = list()
+                # iterating over the rows and
+                # getting value from each cell in row
+                for row in worksheet.iter_rows():
+                    row_data = list()
+                    for cell in row:
+                        row_data.append(str(cell.value))
+                    excel_data.append(row_data)
+                
+               
+                for product in excel_data:
+                    
+                    if product[0] in ['id', 'None']:
+                        continue
+                    
+                    if (product[2]) == 'None':
+                        price = 0
+                    else:
+                        price = float((product[2]))
+                    
+                    name = product[1]
+                    quantity = float(product[3])
+                    taxs = float(product[4])
+                    new_product, created = Product.objects.get_or_create(
+                        name=name,
+                        price=price,
+                        quantity=quantity,
+                        taxs=taxs,
+                    )
+                    tags_list = product[6].split(", ")
+                    
+                    for tagline in tags_list:
+                        tag,created = Tag.objects.get_or_create(
+                            name=tagline
+                        )
+                        new_product.tag.add(tag)
+                        new_product.save()
+                    print("Cargando ", new_product.name)
+                    
+            return self.form_valid(form)
         else:
             form = UploadFileForm()
         return render(request, 'upload.html', {'form': form})
