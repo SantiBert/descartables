@@ -122,23 +122,13 @@ class BrandDeleteVIew(UpdateView):
 
 #Vistas de Tags
 
-class TagListView(View):
-    def get(self, request, *args, **kwargs):
-        try:
-            tags = Tag.objects.filter(is_active=True)
-            paginator = Paginator(tags, 10)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-        except:
-            tags = None
-            page_obj = None
 
-        context = {
-            "tags": tags,
-            "page_obj":page_obj
-        }
-        return render(request, 'tags.html', context)
-    
+class TagListView(ListView):
+    model = Tag
+    template_name = 'tags.html'
+    context_object_name = "tags" 
+    paginate_by = 10 
+
 
 class CreateTagView(CreateView):
     model = Tag
@@ -280,8 +270,12 @@ class UploadFileView(SuccessMessageMixin,FormView):
                     if product[0] in ['id', 'None']:
                         continue
                     
+                    if (product[2]) == 'None':
+                        price = 0
+                    else:
+                        price = float((product[2]))
+                    
                     name = product[1]
-                    price = float((product[2]))
                     quantity = float(product[3])
                     taxs = float(product[4])
                     new_product, created = Product.objects.get_or_create(
