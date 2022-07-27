@@ -170,24 +170,25 @@ class AllProductListView(ListView):
             productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
             
         return queryset
-
     
+class SearchView(View):
     def post(self, request, *args, **kwargs):
-        queryset = request.POST.get("buscar") 
-        if queryset: 
-            products = Product.objects.filter( 
-                Q(name__icontains=queryset) | 
-                Q(tag__name__icontains=queryset, tag__status="1", tag__is_active=True),                
+        queryset = request.POST.get("buscar")
+        if queryset:
+           parsequery = queryset.split()
+           products = Product.objects.filter( 
+                Q(name__in=parsequery) | 
+                Q(tag__name__in=parsequery, tag__status="1", tag__is_active=True),                
                 status="1",
                 is_active=True 
             ).distinct()
         else:
             return self.get(request)
-        context = { 
-            "products": products, 
-        } 
-        return render(request, 'products.html', context)
-    
+        
+        context = {
+           "products": products,
+        }
+        return render(request, 'results.html', context)
 
 class ProductCreateView(CreateView):
     model = Product
