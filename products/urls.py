@@ -44,7 +44,7 @@ urlpatterns = [
     path('productos/crear/', ProductCreateView.as_view(), name='products_create'),
     path('productos/editar/<slug:slug>/', ProductUpdateView.as_view(), name='products_update'),
     path('productos/eliminar/<slug:slug>/', ProductDeleteView.as_view(), name='products_delete'),
-    path('productos/resultados', SearchView.as_view(), name='results'),
+    path('productos/resultados/', SearchView.as_view(), name='results'),
     #subir archivos
     path('subir-archivo/',UploadFileView.as_view(),name='upload_file')
 ]

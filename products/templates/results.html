@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Todos los productos{% endblock %}
 {% block content %}
-<div class="row">
+<!--div class="row">
   <nav aria-label="Page navigation example">
     <ul class="pagination">
       {% if page_obj.has_previous %}
@@ -29,7 +29,7 @@
       </li>
       {% endif %}
     </ul>
-  </nav>
+  </nav-->
 
   {% if messages %}
     {% for message in messages %}
@@ -47,7 +47,7 @@
       <div class="card my-4">
         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
           <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-            <h6 class="text-white text-capitalize ps-3">Todos los productos</h6>
+            <h6 class="text-white text-capitalize ps-3">Resultados</h6>
           </div>
         </div>
         <div class="card-body px-0 pb-2">
@@ -56,12 +56,12 @@
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio final</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tag</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Marca</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cantidad</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Impuesto</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio final</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
@@ -73,6 +73,15 @@
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{product.name |capfirst}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                          <span class="badge badge-sm bg-gradient-primary">
+                            $ {{product.final_price}}
+                          </span>
                       </div>
                     </div>
                   </td>
@@ -114,15 +123,6 @@
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm"> {{product.taxs}} %</h6>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                          <span class="badge badge-sm bg-gradient-primary">
-                            $ {{product.final_price}}
-                          </span>
                       </div>
                     </div>
                   </td>
