@@ -101,7 +101,8 @@
             <div class="input-group input-group-outline">
               <form method="POST" action="{%url 'results'%}"> 
                 <div class="form-inline my-2 my-lg-2"> {% csrf_token %}
-                  <input class="" type="text" autocomplete="off" name="buscar" placeholder="Buscar"> 
+                  <input class="" type="text" autocomplete="off" name="buscar" placeholder="Buscar">
+                  <input class="btn btn-primary btn-sm" type="submit" value="Buscar">
                 </div>
               </form>
             </div>

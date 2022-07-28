@@ -160,7 +160,6 @@ class TagDeleteVIew(UpdateView):
 class AllProductListView(ListView):
     
     template_name = 'products.html'
-    #queryset = Product.objects.filter(is_active=True)
     context_object_name = "products" 
     paginate_by = 10 
     
@@ -168,27 +167,39 @@ class AllProductListView(ListView):
         queryset = Product.objects.filter(is_active=True)
         for productline in queryset:
             productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
-            
         return queryset
     
+        
+
 class SearchView(View):
     def post(self, request, *args, **kwargs):
         queryset = request.POST.get("buscar")
         if queryset:
            parsequery = queryset.split()
            products = Product.objects.filter( 
-                Q(name__in=parsequery) | 
-                Q(tag__name__in=parsequery, tag__status="1", tag__is_active=True),                
-                status="1",
-                is_active=True 
+                Q(name__contains=parsequery) | 
+                Q(tag__name__in=parsequery,
+                    tag__status="1",
+                    tag__is_active=True),                
+                    status="1",
+                    is_active=True 
             ).distinct()
         else:
             return self.get(request)
         
+        for productline in products:
+            productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+        
+        paginator = Paginator(products, 10) 
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+            
         context = {
            "products": products,
+           "page_obj":page_obj
         }
         return render(request, 'results.html', context)
+
 
 class ProductCreateView(CreateView):
     model = Product

@@ -56,12 +56,12 @@
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio final</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tag</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Marca</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cantidad</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Impuesto</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio final</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
@@ -73,6 +73,15 @@
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{product.name |capfirst}}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                          <span class="badge badge-sm bg-gradient-primary">
+                            $ {{product.final_price}}
+                          </span>
                       </div>
                     </div>
                   </td>
@@ -117,15 +126,7 @@
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                          <span class="badge badge-sm bg-gradient-primary">
-                            $ {{product.final_price}}
-                          </span>
-                      </div>
-                    </div>
-                  </td>
+                  
                   <td class="align-middle text-center text-sm">
                     {% if product.status == '1' %}
                     <span class="badge badge-sm bg-gradient-success">Disponible</span>
