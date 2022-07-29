@@ -175,19 +175,26 @@ class SearchView(View):
     def post(self, request, *args, **kwargs):
         queryset = request.POST.get("buscar")
         if queryset:
-           parsequery = queryset.split()
-           products = Product.objects.filter( 
-                Q(name__contains=parsequery) | 
-                Q(tag__name__in=parsequery,
+            list_result = []
+            list_reult_2 = []
+            parsequery = queryset.split()
+            for x in parsequery:
+               products = Product.objects.filter( 
+                Q(name__contains=x) | 
+                Q(tag__name__contains=x,
                     tag__status="1",
                     tag__is_active=True),                
                     status="1",
-                    is_active=True 
-            ).distinct()
+                    is_active=True )
+               list_result += products
         else:
             return self.get(request)
         
-        for productline in products:
+        for t in list_result:
+            if t not in list_reult_2:
+                list_reult_2.append(t)
+        
+        for productline in list_reult_2:
             productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
         
         paginator = Paginator(products, 10) 
@@ -195,7 +202,7 @@ class SearchView(View):
         page_obj = paginator.get_page(page_number)
             
         context = {
-           "products": products,
+           "products": list_reult_2,
            "page_obj":page_obj
         }
         return render(request, 'results.html', context)
@@ -255,9 +262,7 @@ class UploadFileView(SuccessMessageMixin,FormView):
     form_class = UploadFileForm
     success_url = reverse_lazy('all_products_list')
     success_message = 'Todos los productos se han cargado correctamente'
-    
-    
-    
+
     def post(self,request, *args, **kwarg):
         if request.method == 'POST':
             form = UploadFileForm(request.POST, request.FILES)
