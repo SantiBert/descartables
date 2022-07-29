@@ -161,41 +161,50 @@ class AllProductListView(ListView):
     
     template_name = 'products.html'
     context_object_name = "products" 
-    paginate_by = 10 
+    paginate_by = 10
+    queryset = Product.objects.filter(is_active=True)
     
+    """
     def get_queryset(self):
         queryset = Product.objects.filter(is_active=True)
+        
+        """"""
         for productline in queryset:
             productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+            
         return queryset
-    
+    """
         
 
 class SearchView(View):
     def post(self, request, *args, **kwargs):
         queryset = request.POST.get("buscar")
         if queryset:
-           parsequery = queryset.split()
-           products = Product.objects.filter( 
-                Q(name__contains=parsequery) | 
-                Q(tag__name__in=parsequery,
+            list_result = []
+            list_reult_2 = []
+            parsequery = queryset.split()
+            for x in parsequery:
+               products = Product.objects.filter( 
+                Q(name__contains=x) | 
+                Q(tag__name__contains=x,
                     tag__status="1",
                     tag__is_active=True),                
                     status="1",
-                    is_active=True 
-            ).distinct()
+                    is_active=True )
+               list_result += products
         else:
             return self.get(request)
         
-        for productline in products:
-            productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+        for t in list_result:
+            if t not in list_reult_2:
+                list_reult_2.append(t)
         
         paginator = Paginator(products, 10) 
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
             
         context = {
-           "products": products,
+           "products": list_reult_2,
            "page_obj":page_obj
         }
         return render(request, 'results.html', context)
@@ -232,8 +241,6 @@ class ProductByTagListView(View):
         try:
             tag = Tag.objects.get(id=id)
             products = Product.objects.filter(is_active=True, tag = tag)
-            for productline in products:
-                productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
             paginator = Paginator(products, 25)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
@@ -255,9 +262,7 @@ class UploadFileView(SuccessMessageMixin,FormView):
     form_class = UploadFileForm
     success_url = reverse_lazy('all_products_list')
     success_message = 'Todos los productos se han cargado correctamente'
-    
-    
-    
+
     def post(self,request, *args, **kwarg):
         if request.method == 'POST':
             form = UploadFileForm(request.POST, request.FILES)

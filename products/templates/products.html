@@ -56,11 +56,10 @@
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio final</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tag</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Marca</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cantidad</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Precio</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Impuesto</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                   <th class="text-secondary opacity-7"></th>
@@ -80,7 +79,7 @@
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
                           <span class="badge badge-sm bg-gradient-primary">
-                            $ {{product.final_price}}
+                            $ {{product.price}}
                           </span>
                       </div>
                     </div>
@@ -109,13 +108,6 @@
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{product.quantity}}</h6>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm"> $ {{product.price}}</h6>
                       </div>
                     </div>
                   </td>
