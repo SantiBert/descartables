@@ -161,14 +161,19 @@ class AllProductListView(ListView):
     
     template_name = 'products.html'
     context_object_name = "products" 
-    paginate_by = 10 
+    paginate_by = 10
+    queryset = Product.objects.filter(is_active=True)
     
+    """
     def get_queryset(self):
         queryset = Product.objects.filter(is_active=True)
+        
+        """"""
         for productline in queryset:
             productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
+            
         return queryset
-    
+    """
         
 
 class SearchView(View):
@@ -193,9 +198,6 @@ class SearchView(View):
         for t in list_result:
             if t not in list_reult_2:
                 list_reult_2.append(t)
-        
-        for productline in list_reult_2:
-            productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
         
         paginator = Paginator(products, 10) 
         page_number = request.GET.get('page')
@@ -239,8 +241,6 @@ class ProductByTagListView(View):
         try:
             tag = Tag.objects.get(id=id)
             products = Product.objects.filter(is_active=True, tag = tag)
-            for productline in products:
-                productline.final_price =  productline.price + (productline.price * (productline.taxs /100))
             paginator = Paginator(products, 25)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
